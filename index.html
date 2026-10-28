@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estación 3 · Preguntas dialogadas</title>
+<style>
+:root{--bg:#FFF8EC;--ink:#2C3E50;--card:#FFFFFF;--line:#C9B99A;--brand:#164F78;--brand-ink:#FFFFFF;--hl:#FFE600;--ok:#1B6E3A;--ok-bg:#E3F4E8;--warn:#7A4A00;--warn-bg:#FFF1DC;--fs:18px}
+*{box-sizing:border-box}
+html{font-size:var(--fs)}
+body{margin:0;overflow:hidden;height:100vh;height:100dvh;background:var(--bg);color:var(--ink);font-family:Verdana,Arial,"OpenDyslexic",sans-serif;line-height:1.6;letter-spacing:.02em;word-spacing:.08em}
+h1,h2,h3,p{margin:0}
+:focus-visible{outline:4px solid var(--brand);outline-offset:3px;box-shadow:0 0 0 7px #fff}
+button{font:inherit;letter-spacing:inherit;cursor:pointer;min-height:48px;min-width:48px;border-radius:999px;border:2px solid var(--brand);background:var(--card);color:var(--brand);padding:8px 20px}
+button.primary{background:var(--brand);color:var(--brand-ink)}
+button:disabled{cursor:not-allowed;opacity:.45}
+button[aria-pressed="true"]{background:var(--brand);color:var(--brand-ink)}
+.screen{display:none}
+.screen.on{display:block;height:100vh;height:100dvh;overflow:auto}
+#s3.on{display:flex;flex-direction:column;overflow:hidden}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.center{text-align:center}
+a.ir{display:inline-flex;align-items:center;justify-content:center;min-height:48px;min-width:48px;border-radius:999px;border:2px solid #2C3E50;background:#2C3E50;color:#fff;text-decoration:none;font-weight:700;font-size:1.1rem;padding:12px 40px}
+a.ir:hover{background:var(--brand);border-color:var(--brand)}
+
+/* ---------- Logo y foto ---------- */
+.logo{display:block;margin:0 auto;max-height:90px;max-width:260px;object-fit:contain}
+.logo-ph{margin:0 auto;width:220px;height:70px;border:3px dashed var(--line);border-radius:14px;display:grid;place-items:center;font-size:.6rem;color:#7b6f58}
+.tutor{width:clamp(130px,27vh,210px);height:clamp(130px,27vh,210px);border-radius:50%;object-fit:cover;border:5px solid var(--brand);background:#fff;display:block;margin:0 auto}
+.tutor-ph{width:clamp(130px,27vh,210px);height:clamp(130px,27vh,210px);border-radius:50%;border:5px dashed var(--line);display:grid;place-items:center;font-size:.6rem;color:#7b6f58;margin:0 auto;background:#fff}
+
+/* ---------- Bienvenida ---------- */
+.wrap{max-width:820px;margin:0 auto;padding:16px 20px;min-height:100%;display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center}
+.card{background:var(--card);border:2px solid var(--line);border-radius:20px;padding:16px 20px;box-shadow:0 3px 10px rgb(44 62 80/8%);width:100%}
+.hello{font-size:1.25rem;color:var(--brand);text-align:center;margin-top:4px}
+.station{font-size:.8rem;text-align:center;margin-top:4px}
+.intro p{font-size:.85rem;margin-bottom:8px}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.steps li{display:flex;gap:12px;align-items:center;font-size:.85rem;line-height:1.4}
+.steps .ic{flex:none;width:40px;height:40px;border-radius:50%;background:#FFF3D6;border:2px solid #F6B93B;display:grid;place-items:center;font-size:1.3rem}
+.big{font-size:1rem;padding:12px 32px}
+
+/* ---------- Bienvenida: foto + globo de diálogo ---------- */
+.stage{width:100%;max-width:1040px;background:#FFF3DC;border:4px solid #E3C47B;border-radius:30px;padding:20px;display:flex;flex-direction:column;align-items:center;gap:16px}
+.hero{display:flex;align-items:center;gap:30px;width:100%}
+.hero .photo{flex:none}
+.tutor.sq,.tutor-ph.sq{width:clamp(180px,52vh,420px);height:clamp(180px,52vh,420px);border-radius:18px;border:0}
+.tutor-ph.sq{border:4px dashed var(--line)}
+.bubble{position:relative;flex:1;min-width:0;background:#FFFBF1;border:4px solid #F6B93B;border-radius:26px;padding:18px 22px}
+.bubble::before{content:"";position:absolute;left:-14px;top:50%;width:24px;height:24px;background:#FFFBF1;border-left:4px solid #F6B93B;border-bottom:4px solid #F6B93B;transform:translateY(-50%) rotate(45deg)}
+.bubble .hello{margin:0}
+.bubble .lead{font-size:.85rem;margin:8px 0 8px}
+button.dark{background:#2C3E50;border-color:#2C3E50;color:#fff}
+@media(max-width:760px){.hero{flex-direction:column;gap:18px}.bubble::before{display:none}}
+
+/* ---------- Elegir cuento ---------- */
+.stories{display:grid;gap:16px;width:100%}
+.story{display:flex;gap:16px;align-items:center;text-align:left;border-radius:18px;padding:18px;min-height:96px;width:100%;color:var(--ink);border-color:var(--line);background:#fff}
+.story .em{font-size:2.2rem}
+.story span.t{font-size:1rem;font-weight:700}
+.story[aria-pressed="true"]{background:#E8F0FA;border:4px solid var(--brand);color:var(--ink)}
+
+/* ---------- Actividad ---------- */
+header{padding:8px 20px;display:flex;gap:12px;align-items:center;justify-content:space-between;width:100%;max-width:1400px;margin:0 auto;flex:none}
+header .logo,header .logo-ph{margin:0;max-height:44px;height:44px;width:auto;max-width:150px}
+header .logo-ph{width:110px;font-size:.5rem}
+.tools{display:flex;gap:8px}
+.tools button{font-size:.7rem}
+main{width:100%;max-width:1400px;margin:0 auto;padding:0 20px 16px;display:grid;grid-template-columns:1fr;grid-template-rows:minmax(0,1fr);gap:12px;flex:1;min-height:0}
+main.help{grid-template-rows:minmax(0,1fr) minmax(0,1.3fr)}
+#dialogo{width:100%;max-width:900px;justify-self:center}
+main.help #dialogo{max-width:none}
+#ayuda[hidden]{display:none}
+.title{flex:1;text-align:center;font-weight:700;font-size:.9rem;color:var(--brand)}
+@media(min-width:960px){main.help{grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);grid-template-rows:minmax(0,1fr)}}
+section{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:16px;overflow:auto;min-height:0;box-shadow:0 3px 10px rgb(44 62 80/8%)}
+h2{font-size:1em;margin-bottom:8px}
+.par{border:2px solid var(--line);border-radius:10px;padding:8px 12px;margin-bottom:8px}
+.par p{font-size:.85em}
+.par.hl{background:var(--hl);border-color:#7A6A00;border-width:4px;color:#1F2933}
+progress{width:100%;height:12px;margin-bottom:16px;accent-color:var(--brand)}
+.qrow h2{font-size:1.25em;margin:0 0 16px}
+fieldset{border:0;padding:0;margin:0}
+legend{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.opt{margin-bottom:12px}
+.opt[hidden]{display:none}
+.opt .ans{width:100%;text-align:left;font-size:1em;min-height:64px;display:flex;gap:12px;align-items:center;border-color:var(--line);color:var(--ink);border-radius:18px}
+.opt .ans b{display:inline-grid;place-items:center;min-width:34px;height:34px;border-radius:50%;background:var(--brand);color:#fff;flex:none}
+.opt .ans.model{background:var(--ok-bg);border:4px solid var(--ok)}
+.opt .ans.wrong{background:var(--warn-bg);border:3px dashed var(--warn);color:var(--warn);opacity:1}
+.opt .ans.good{background:var(--ok-bg);border:4px solid var(--ok);color:var(--ok);opacity:1}
+.opt .ans:disabled{opacity:1}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:4px;justify-content:center}
+.actions button{font-size:.85em}
+.fbc{margin-top:12px;padding:14px 16px;border-radius:14px;border:3px solid var(--line);background:#fff;font-size:.95em;text-align:center}
+#ayuda h2{color:var(--brand)}
+#dialogo{font-size:var(--qfs,18px);letter-spacing:var(--qls,.02em);word-spacing:.08em}
+#ayuda{font-size:var(--tfs,18px);letter-spacing:var(--tls,.02em);word-spacing:.08em}
+#dialogo p,#dialogo h2,#dialogo .ans,#dialogo .fbc{line-height:var(--qlh,1.4)}
+#ayuda p,#ayuda h2{line-height:var(--tlh,1.5)}
+.ctl{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;margin-bottom:10px;font-size:14px!important;line-height:1.2!important;letter-spacing:0!important;color:var(--brand)}
+.cg{display:flex;align-items:center;gap:4px;font-weight:700}
+.cg span{margin-right:2px}
+.ctl button{font-size:16px;min-height:38px;min-width:38px;padding:2px 10px;letter-spacing:0;line-height:1}
+#fb:empty{display:none}
+#fb{margin-top:8px}
+.fbc p{margin-bottom:12px}
+.fbc.ok{background:var(--ok-bg);border-color:var(--ok);color:#12482A}
+.fbc.help{background:#E8F0FA;border-color:var(--brand)}
+.fbc.soft{background:var(--warn-bg);border-color:var(--warn)}
+.praise{font-weight:700;display:block;margin-top:8px}
+.stars{font-size:1.2em;letter-spacing:.2em;color:#7A5C00}
+.fall{position:fixed;top:-40px;font-size:2rem;color:#B38600;pointer-events:none;z-index:20;animation:fall 2.2s ease-in forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(360deg);opacity:.2}}
+@media(prefers-reduced-motion:reduce){.fall{display:none}*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- ========== PANTALLA 1: BIENVENIDA ========== -->
+<div class="screen on" id="s1">
+  <div class="wrap">
+    <div class="stage">
+      <div class="hero">
+        <div id="tutor" class="photo"></div>
+        <div class="bubble">
+          <h1 class="hello" id="saludo"></h1>
+          <p class="station">Estación 3 · Preguntas dialogadas</p>
+          <p class="lead">Hoy vamos a conversar sobre un cuento. ¡Es muy fácil! Esto haremos:</p>
+          <ul class="steps">
+            <li><span class="ic" aria-hidden="true">📖</span><span>Leeremos el cuento juntos.</span></li>
+            <li><span class="ic" aria-hidden="true">💬</span><span>Te haré preguntas: unas se buscan en el cuento, otras se piensan y otras son para dar tu opinión.</span></li>
+            <li><span class="ic" aria-hidden="true">💡</span><span>Si necesitas ayuda, te daré una pista. ¡Equivocarse está bien!</span></li>
+            <li><span class="ic" aria-hidden="true">⭐</span><span>Te felicitaré y ganarás estrellas.</span></li>
+          </ul>
+        </div>
+      </div>
+      <button class="primary big dark" id="listo">¡Estoy listo!</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== PANTALLA 2: ELEGIR CUENTO ========== -->
+<div class="screen" id="s2">
+  <div class="wrap">
+    <div id="logo2"></div>
+    <h1 class="hello" tabindex="-1" id="h2elegir">Elige tu cuento</h1>
+    <div class="stories">
+      <button class="story" id="st0" aria-pressed="false"><span class="em" aria-hidden="true">🦊</span><span class="t">El zorro y la cosecha de quinua</span></button>
+    </div>
+    <button class="primary big" id="comenzar" disabled>Comenzar</button>
+  </div>
+</div>
+
+<!-- ========== PANTALLA 3: ACTIVIDAD ========== -->
+<div class="screen" id="s3">
+  <header>
+    <div id="logo3"></div>
+  </header>
+  <main id="main">
+    <section id="ayuda" aria-label="Ayuda del cuento" hidden>
+      <h2 id="hAyuda">Mira esta parte del cuento</h2>
+      <div class="ctl" id="ctlT" role="group" aria-label="Ajustes del texto del cuento"></div>
+      <div id="frag"></div>
+    </section>
+    <section id="dialogo" aria-label="Preguntas">
+      <div class="ctl" id="ctlQ" role="group" aria-label="Ajustes de las preguntas"></div>
+      <div id="vista"></div>
+      <div id="fb" class="fbc" role="status" aria-live="polite" aria-atomic="true"></div>
+    </section>
+  </main>
+</div>
+
+<!-- ========== PANTALLA 4: FELICITACIÓN ========== -->
+<div class="screen" id="s4">
+  <div class="wrap">
+    <div id="logo4"></div>
+    <div id="tutor4"></div>
+    <h1 class="hello" tabindex="-1" id="h4">¡Felicitaciones, lo hiciste muy bien!</h1>
+    <p class="stars" aria-hidden="true">★ ★ ★ ★ ★ ★</p>
+    <div class="card center">
+      <p style="font-size:1rem">¡Ya puedes pasar a la <b>Estación 4</b>!</p>
+      <p style="font-size:1.2rem;color:var(--brand);font-weight:700;margin-top:8px">🧩 Armamos el cuento</p>
+    </div>
+    <a class="primary big dark ir" href="https://anthophilael-oss.github.io/estacion-4-y-5/">Ir →</a>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+/* ===== CONFIGURA AQUÍ TU LOGO Y LA FOTO DEL TUTOR =====
+   Pon tus imágenes en la misma carpeta que este archivo
+   (o usa una URL completa) y cambia los nombres. */
+const LOGO_SRC  = "logo.png";    // tu logo
+const TUTOR_SRC = "tutor.png";   // foto del tutor
+const TUTOR_NOMBRE = "tu tutor"; // ej.: "profe Carlos"
+/* ====================================================== */
+
+const Q=[
+{n:"Literal",d:"Obtiene información",w:"Dónde",p:[0],
+ g:"Escucha con atención: ¿Dónde ocurre la historia? Mira las tres opciones y elige una.",
+ q:"¿Dónde ocurre la historia?",o:["En un valle de Puno.","En una ciudad de la costa.","En un bosque de la selva."],c:0,
+ g1:"Vamos a mirar el párrafo del Inicio, está resaltado en amarillo. Ahí se dice dónde vivía Mateo.",
+ e:"¡Así es! La historia ocurre en un valle de Puno, donde Mateo sembraba quinua dorada. Un valle es un terreno plano entre montañas.",
+ pr:"¡Gran atención a los detalles!",
+ m:"El primer párrafo dice que todo sucede en un valle de Puno."},
+{n:"Literal",d:"Obtiene información",w:"Qué",p:[1],
+ g:"Escucha con atención: ¿Qué le prometió el zorro Antonio a Mateo a cambio de un saco de quinua?",
+ q:"¿Qué le prometió el zorro Antonio a Mateo a cambio del saco de quinua?",o:["Ayudarle a cosechar la quinua.","Cuidar la chacra toda la semana.","Traerle más semillas de Puno."],c:1,
+ g1:"Mira el párrafo del Nudo, resaltado en amarillo. Busca lo que Antonio le dijo a Mateo.",
+ e:"¡Correcto! Antonio prometió cuidar la chacra toda la semana a cambio de un saco de quinua. Una chacra es un terreno donde se siembran cultivos.",
+ pr:"¡Excelente memoria de lo que leíste!",
+ m:"En el segundo párrafo, Antonio dice que cuidará la chacra toda la semana."},
+{n:"Inferencial",d:"Infiere e interpreta",w:"Por qué",p:[1],
+ g:"Escucha con atención: ¿Por qué los pájaros dañaron las plantas de quinua? Piensa en lo que pasó antes.",
+ q:"¿Por qué los pájaros dañaron las plantas de quinua?",o:["Porque Mateo les dio permiso de comer.","Porque el zorro los asustó hacia la chacra.","Porque el zorro se comió la quinua y se quedó dormido en vez de cuidarla."],c:2,
+ g1:"Mira el párrafo del Nudo, en amarillo. Fíjate qué hizo Antonio antes de que llegaran los pájaros.",
+ e:"¡Muy bien! Antonio se durmió y nadie cuidó la chacra; por eso los pájaros aprovecharon para dañar las plantas. Esa es la causa (el descuido) y su efecto (las plantas dañadas).",
+ pr:"¡Excelente deducción!",
+ m:"Antonio se comió la quinua y se durmió; sin nadie que vigilara, los pájaros dañaron las plantas."},
+{n:"Inferencial",d:"Infiere e interpreta",w:"Qué",p:[2],
+ g:"Escucha con atención: ¿Qué quiso decir Mateo con la frase: «La confianza se gana con acciones, no con palabras»?",
+ q:"¿Qué quiso decir Mateo con la frase \"La confianza se gana con acciones, no con palabras\"?",o:["Que debemos demostrar que somos honestos cumpliendo lo que prometemos.","Que es mejor hablar mucho para convencer a los amigos.","Que la quinua se debe vender a un precio alto."],c:0,
+ g1:"Mira el párrafo del Desenlace, en amarillo. Mateo dice esa frase después de ver lo que hizo Antonio.",
+ e:"¡Correcto! Mateo quiso decir que la confianza se gana cumpliendo lo que prometemos, no solo hablando. Confianza es creer que una persona hará lo que dice.",
+ pr:"¡Qué buena interpretación!",
+ m:"Antonio prometió cuidar la chacra, pero no lo hizo. Mateo le enseña que la confianza se gana con hechos."},
+{n:"Crítico-reflexivo",d:"Reflexiona y evalúa",w:"Cómo",p:[2],
+ g:"Escucha con atención: ¿Cómo se sintió el zorro Antonio al final de la historia y qué decidió hacer?",
+ q:"¿Cómo se sintió el zorro Antonio al final de la historia y qué decidió hacer?",o:["Se sintió alegre y se fue a otro valle.","Se molestó con Mateo y no volvió a hablarle.","Se sintió avergonzado y prometió reparar su falta."],c:2,
+ g1:"Mira el último párrafo, el Desenlace, en amarillo. Ahí dice cómo se sintió Antonio.",
+ e:"¡Correcto! Antonio sintió vergüenza porque reconoció su error, y por eso prometió repararlo. Avergonzado quiere decir que uno se siente mal por algo que hizo.",
+ pr:"¡Entiendes muy bien los sentimientos de los personajes!",
+ m:"El último párrafo dice que Antonio se sintió avergonzado y prometió reparar su falta."},
+{n:"Crítico-reflexivo",d:"Reflexiona y evalúa",w:"Qué",p:[0,1],
+ g:"Escucha con atención: ¿Qué opinas de la actitud del zorro Antonio al no querer trabajar? Piensa en lo que le pasó a Mateo.",
+ q:"¿Qué opinas de la actitud inicial del zorro Antonio al no querer trabajar?",o:["Estuvo bien porque consiguió comida sin esfuerzo.","Estuvo mal porque engañó a Mateo y perjudicó su cosecha.","Da igual porque la quinua no era importante."],c:1,
+ g1:"Mira el Inicio y el Nudo, resaltados en amarillo. Piensa qué le pasó a la chacra de Mateo.",
+ e:"¡Correcto! Estuvo mal: Antonio engañó a Mateo y, por no trabajar, perjudicó su cosecha de quinua. Cuando no cumplimos, otras personas salen perjudicadas.",
+ pr:"¡Gran pensamiento crítico! Diste tu opinión con razones.",
+ m:"A Antonio no le gustaba trabajar, engañó a Mateo y las plantas se dañaron."}
+];
+
+const L=["A","B","C"];
+let i=0,help=0,done=false,hidden=new Set(),wrong=new Set(),stars=0,son=true,fs=18,ctx=null;
+const $=id=>document.getElementById(id);
+const vista=$("vista"),fb=$("fb"),ayudaP=$("ayuda"),frag=$("frag"),mainEl=$("main");
+const P=[`En un valle de Puno, Mateo sembraba quinua dorada. Cerca vivía el zorro Antonio, a quien no le gustaba trabajar.`,
+`Un día, Antonio le dijo a Mateo: "Si me das un saco de quinua, cuidaré tu chacra toda la semana". Mateo aceptó. Pero cuando el campesino se fue, Antonio se comió la quinua y se quedó dormido. Los pájaros aprovecharon y dañaron las plantas.`,
+`Al regresar, Mateo vio el engaño y le dijo: "La confianza se gana con acciones, no con palabras". Antonio se sintió avergonzado y prometió reparar su falta.`];
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ---------- Imágenes con respaldo ---------- */
+function img(src,cls,phCls,phText,alt){
+  const im=new Image();im.src=src;im.alt=alt;im.className=cls;
+  const ph=document.createElement("div");ph.className=phCls;ph.textContent=phText;
+  const box=document.createElement("div");
+  box.appendChild(ph);
+  im.onload=()=>{box.innerHTML="";box.appendChild(im)};
+  return box;
+}
+function logo(id){const n=$(id);n.innerHTML="";n.appendChild(img(LOGO_SRC,"logo","logo-ph","Tu logo aquí","Logo"))}
+logo("logo2");logo("logo3");logo("logo4");
+$("tutor").appendChild(img(TUTOR_SRC,"tutor sq","tutor-ph sq","Foto del tutor","Foto del tutor"));
+$("tutor4").appendChild(img(TUTOR_SRC,"tutor","tutor-ph","Foto del tutor","Foto del tutor"));
+$("saludo").textContent="¡Hola! Soy "+TUTOR_NOMBRE+". ¡Bienvenido!";
+
+/* ---------- Navegación ---------- */
+function ir(n){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("on"));$("s"+n).classList.add("on");window.scrollTo(0,0)}
+$("listo").onclick=()=>{ir(2);$("h2elegir").focus()};
+$("st0").onclick=()=>{$("st0").setAttribute("aria-pressed","true");$("comenzar").disabled=false};
+$("comenzar").onclick=()=>{ir(3);i=0;stars=0;pregunta()};
+
+/* ---------- Sonido y confeti ---------- */
+function exito(){
+  if(!son)return;
+  try{ctx=ctx||new (window.AudioContext||window.webkitAudioContext)();
+    [523.25,659.25,783.99,1046.5].forEach((f,k)=>{
+      const o=ctx.createOscillator(),g=ctx.createGain(),t=ctx.currentTime+k*.14;
+      o.type="sine";o.frequency.value=f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.12,t+.03);g.gain.exponentialRampToValueAtTime(.001,t+.4);
+      o.connect(g).connect(ctx.destination);o.start(t);o.stop(t+.45)});
+  }catch(e){}
+}
+function confeti(){
+  if(reduce)return;
+  for(let k=0;k<14;k++){const s=document.createElement("span");s.className="fall";s.setAttribute("aria-hidden","true");s.textContent=k%2?"★":"✦";
+    s.style.left=(5+Math.random()*90)+"vw";s.style.animationDelay=(Math.random()*.6)+"s";document.body.appendChild(s);setTimeout(()=>s.remove(),3200)}
+}
+function ocultar(){ayudaP.hidden=true;mainEl.classList.remove("help");frag.innerHTML="";fb.className="fbc";fb.innerHTML=""}
+function panel(cls,inner,sinFrag){
+  const x=Q[i];
+  fb.className="fbc "+cls;fb.innerHTML=inner;
+  if(sinFrag){frag.innerHTML="";ayudaP.hidden=true;mainEl.classList.remove("help");return}
+  frag.innerHTML=x.p.map(k=>`<div class="par hl"><p>${P[k]}</p></div>`).join("");
+  ayudaP.hidden=false;mainEl.classList.add("help");
+}
+function msg(t,cls){
+  panel(cls,'<p></p>');
+  fb.querySelector("p").textContent=t;
+  const a=document.createElement("div");a.className="actions";
+  a.innerHTML='<button class="primary" id="fbok">Entendido</button>';
+  frag.appendChild(a);
+  $("fbok").onclick=ocultar;
+  $("fbok").focus({preventScroll:true});
+}
+const N=Q.length;
+
+/* ---------- Pregunta (pantalla limpia) ---------- */
+function pregunta(){
+  const x=Q[i];help=0;done=false;hidden=new Set();wrong=new Set();ocultar();
+  vista.innerHTML=`<progress max="${N}" value="${i}" aria-label="Avance: ${i} de ${N}"></progress>
+  <div class="qrow"><h2 id="qt" tabindex="-1">${x.q}</h2></div>
+  <fieldset><legend>Elige una respuesta</legend><div id="ops"></div></fieldset>
+  <div class="actions"><button id="pista">💡 Necesito una pista</button></div>`;
+  const ops=$("ops");
+  x.o.forEach((t,k)=>{
+    const d=document.createElement("div");d.className="opt";d.id="o"+k;
+    d.innerHTML=`<button class="ans" data-k="${k}"><b aria-hidden="true">${L[k]}</b><span>${t}</span></button>`;
+    d.querySelector(".ans").onclick=()=>responder(k);
+    ops.appendChild(d)});
+  $("pista").onclick=()=>ayuda();
+  $("qt").focus({preventScroll:true});
+}
+
+/* ---------- Ayudas de menos a más ---------- */
+function ayuda(pre){
+  pre=pre||"";
+  if(done)return;const x=Q[i];
+  if(help>=3){msg(pre+"Ya tienes la ayuda completa. Elige la opción marcada en verde.","help");return}
+  help++;
+  if(help===1){msg(pre+x.g1,"help")}
+  else if(help===2){
+    const cand=[0,1,2].filter(k=>k!==x.c&&!hidden.has(k));
+    const k=cand.find(z=>!wrong.has(z))??cand[0];
+    if(k!==undefined){hidden.add(k);$("o"+k).hidden=true}
+    msg(pre+"Descartemos una: la opción "+L[k]+" no es. Ahora quedan solo dos. Lee con calma y elige.","help")}
+  else{
+    const b=document.querySelector(`#o${x.c} .ans`);b.classList.add("model");
+    msg(pre+"La respuesta correcta es la opción "+L[x.c]+": "+x.o[x.c]+" "+x.m,"help");
+    $("pista").disabled=true}
+}
+
+/* ---------- Respuesta ---------- */
+function responder(k){
+  if(done||hidden.has(k))return;const x=Q[i];
+  const b=document.querySelector(`#o${k} .ans`);
+  if(k===x.c){
+    done=true;stars++;
+    document.querySelectorAll(".ans").forEach(a=>{a.disabled=true;a.classList.remove("model")});
+    b.classList.add("good");
+    $("pista").hidden=true;
+    panel("ok",`<p>${x.e}<span class="praise">${x.pr}</span><span class="stars" aria-hidden="true">★ ★ ★</span></p><div class="actions"><button class="primary" id="sig">${i<N-1?"Siguiente":"Ver mi resultado"}</button></div>`,true);
+    $("sig").onclick=()=>{if(i<N-1){i++;pregunta()}else fin()};
+    exito();confeti();
+    $("sig").focus({preventScroll:true});
+  }else{
+    wrong.add(k);b.classList.add("wrong");b.disabled=true;
+    if(help<3)ayuda("Casi. Esa no es, pero así se aprende. ");
+    else msg("Casi. Esa no es. Elige la opción marcada en verde.","soft");
+  }
+}
+
+function fin(){
+  ocultar();
+  ir(4);$("h4").focus();exito();confeti();
+}
+
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("fbok"))ocultar()});
+/* ---------- Preferencias ---------- */
+/* Ajustes independientes: preguntas (q) y texto del cuento (t) */
+const cfg={q:{el:$("dialogo"),host:$("ctlQ"),fs:18,lh:1.4,ls:.02},t:{el:$("ayuda"),host:$("ctlT"),fs:18,lh:1.5,ls:.02}};
+const rd=v=>Math.round(v*100)/100;
+function aplicar(k){const c=cfg[k];c.el.style.setProperty("--"+k+"fs",c.fs+"px");c.el.style.setProperty("--"+k+"lh",c.lh);c.el.style.setProperty("--"+k+"ls",c.ls+"em")}
+[["Tamaño","fs",2,14,32],["Interlineado","lh",.2,1,2.4],["Interletra","ls",.03,0,.2]].forEach(([nom,prop,paso,min,max])=>{
+  ["q","t"].forEach(k=>{
+    const c=cfg[k],g=document.createElement("div");g.className="cg";g.setAttribute("role","group");g.setAttribute("aria-label",nom);
+    g.innerHTML=`<span>${nom}</span><button type="button" aria-label="${nom} menos">−</button><button type="button" aria-label="${nom} más">+</button>`;
+    const [m,p]=g.querySelectorAll("button");
+    m.onclick=()=>{c[prop]=rd(Math.max(min,c[prop]-paso));aplicar(k)};
+    p.onclick=()=>{c[prop]=rd(Math.min(max,c[prop]+paso));aplicar(k)};
+    c.host.appendChild(g);
+  });
+});
+aplicar("q");aplicar("t");
+})();
+</script>
+</body>
+</html>
